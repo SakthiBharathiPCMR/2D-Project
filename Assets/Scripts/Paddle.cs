@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Paddle : MonoBehaviour
 {
-    [SerializeField] private float xRange;
+    [SerializeField] private float xRange = 9.5f;
     [SerializeField] private Camera mainCamera;
+
 
     private void Update()
     {
@@ -18,4 +19,19 @@ public class Paddle : MonoBehaviour
         mousePos.x = Mathf.Clamp(mousePos.x, -xRange, xRange);
         transform.position = new Vector2(mousePos.x, transform.position.y);
     }
+
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!Ball.isBallMoved) return;
+
+        if (collision.gameObject.CompareTag(TagManager.BALL_TAG))
+        {
+            collision.gameObject.GetComponent<Ball>().RotatetheBall(transform.position);
+        }
+
+    }
+
+
 }

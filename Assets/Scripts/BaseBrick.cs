@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BaseBrick : MonoBehaviour
 {
-    protected const string BALL_TAG = "Ball";
+
 
     public int brickHealth;
 
@@ -20,10 +20,15 @@ public class BaseBrick : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag(BALL_TAG))
+        if (collision.gameObject.CompareTag(TagManager.BALL_TAG))
         {
             DamageBrick();
+
+            collision.gameObject.GetComponent<Ball>().RotatetheBall(transform.position);
         }
 
     }
+
+
+
 }

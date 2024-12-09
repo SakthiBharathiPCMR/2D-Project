@@ -4,11 +4,7 @@ using UnityEngine;
 
 public class Brick : BaseBrick
 {
-    void Start()
-    {
 
-        
-    }
 
     public override void DamageBrick()
     {
