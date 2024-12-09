@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-
-
-    [SerializeField] private Transform leftWall;
-    [SerializeField] private Transform rightWall;
-    [SerializeField] private Transform topWall;
-    [SerializeField] private Transform bottomWall;
-
     [SerializeField] private Paddle paddle;
     [SerializeField] private float moveSpeed = 5f;
 
@@ -20,89 +13,64 @@ public class Ball : MonoBehaviour
     private void Start()
     {
         GetPaddleOffset();
+        transform.parent = paddle.transform;
+    }
+
+    private void GetPaddleOffset()
+    {
+        paddleOffset = paddle.transform.position - transform.position;
     }
 
 
     private void Update()
     {
-        FireTheBall();
+        switch (GameManager.gameState)
+        {
+            case GameManager.GameState.BallInPaddle:
+                CheckForInput();
+                break;
 
-        MoveTheBall();
+            case GameManager.GameState.BallFired:
+                MoveTheBall();
+                break;
+        }
 
-        DetectWall();
-
-
-    }
-
-    private void LateUpdate()
-    {
-        FollowPaddle();
     }
 
     private void MoveTheBall()
     {
         if (isBallMoved)
         {
-            transform.Translate(transform.up * Time.deltaTime * moveSpeed);
+            transform.position += transform.up * Time.deltaTime * moveSpeed;
         }
     }
 
-    private void FireTheBall()
+    private void CheckForInput()
     {
         if (Input.GetMouseButtonDown(0))
         {
             isBallMoved = true;
+            transform.parent = null;
+            GameManager.UpdateGameState();
+            transform.eulerAngles = Vector3.forward * 50;
         }
     }
 
 
-
-    private void GetPaddleOffset()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        paddleOffset = transform.position - paddle.transform.position;
+        if (!isBallMoved) return;
+
+        Vector2 inNormal = collision.GetContact(0).normal;
+        Debug.Log("Innormal"+inNormal);
+        Vector2 reflectionDirection = Vector3.Reflect(transform.up, inNormal);
+
+        Debug.Log("Ref"+reflectionDirection);
+
+        transform.up = reflectionDirection;
 
     }
 
-    private void FollowPaddle()
-    {
-        if (isBallMoved) return;
-
-        transform.position = paddle.transform.position + (Vector3)paddleOffset;
-    }
-
-
-    public void RotatetheBall(Vector2 targetPos)
-    {
-        Vector2 rotateDirection = (targetPos - (Vector2)transform.position).normalized;
-
-        float angleToRotate = (Mathf.Atan2(rotateDirection.y, rotateDirection.x)) * Mathf.Rad2Deg;
-        Debug.Log(angleToRotate);
-
-
-
-        transform.eulerAngles = new Vector3(0, 0, angleToRotate);
-
-    }
-
-    private void DetectWall()
-    {
-        if (transform.position.x > rightWall.position.x)
-        {
-            RotatetheBall(rightWall.position);
-        }
-        else if (transform.position.x < leftWall.position.x)
-        {
-            RotatetheBall(leftWall.position);
-        }
-        else if (transform.position.y > topWall.position.y)
-        {
-            RotatetheBall(topWall.position);
-        }
-        else if (transform.position.y < bottomWall.position.y)
-        {
-            RotatetheBall(bottomWall.position);
-        }
-    }
 
 
 

@@ -23,8 +23,6 @@ public class BaseBrick : MonoBehaviour
         if (collision.gameObject.CompareTag(TagManager.BALL_TAG))
         {
             DamageBrick();
-
-            collision.gameObject.GetComponent<Ball>().RotatetheBall(transform.position);
         }
 
     }
