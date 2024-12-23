@@ -29,6 +29,8 @@ public class BoxManager : MonoBehaviour
     }
     void Start()
     {
+        row = NodeManager.instance.row;
+        col = NodeManager.instance.col;
         CreateBoxGrid();
         SpawnBox();
     }

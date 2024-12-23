@@ -5,6 +5,9 @@ using UnityEngine;
 public class NodeManager : MonoBehaviour
 {
     public static NodeManager instance;
+
+    public int row;
+    public int col;
     public Node[,] nodes;
     private void Awake()
     {
