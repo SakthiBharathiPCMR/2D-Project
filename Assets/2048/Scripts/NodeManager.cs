@@ -12,19 +12,17 @@ public class NodeManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-    }
-    void Start()
-    {
-        nodes = new Node[BoxManager.instance.col, BoxManager.instance.row];
+        nodes = new Node[col,row];
         CreateGridNode();
     }
 
 
+
     private void CreateGridNode()
     {
-        for (int i = 0; i < BoxManager.instance.row; i++)
+        for (int i = 0; i < row; i++)
         {
-            for (int j = 0; j < BoxManager.instance.col; j++)
+            for (int j = 0; j < col; j++)
             {
                 Node curNode = new Node();
                 curNode.gridInd = new Vector2Int(j, i);

@@ -13,10 +13,12 @@ public class Box : MonoBehaviour
     public Node curNode;
 
 
+    
     public void SetBox(Node node)
     {
-        curNode=node;
-        curNode.curBox=this;
+        curNode = node;
+        curNode.curBox = this;
+        curNode.nodeState = NodeState.block;
     }
 
 }
