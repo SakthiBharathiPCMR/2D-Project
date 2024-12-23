@@ -78,6 +78,8 @@ public class BoxManager : MonoBehaviour
         startNode.x = moveDir.x == -1 ? 0 : col - 1;
         startNode.y = moveDir.y == -1 ? 0 : row - 1;
 
+        List<Box> movedBox = new List<Box>();
+
         for (int i = 0; i < row; i++)
         {
             for (int j = 0; j < col; j++)
@@ -93,42 +95,42 @@ public class BoxManager : MonoBehaviour
                     if (curBox.boxState == BoxState.Idle)
                     {
                         Vector2Int curInd = curBox.curNode.gridInd;
-                        int counter=0;
+                        int counter = 0;
                         do
                         {
                             curInd += moveDir;
 
                             counter++;
-                            if(counter>50)
+                            if (counter > 50)
                             {
+                                Debug.LogWarning("Loop exceeded 50 iterations");
                                 break;
                             }
                         }
-                        while (curInd.x < col || curInd.x >= 0 || curInd.y < row || curInd.y >= 0 || NodeManager.instance.nodes[curInd.x, curInd.y].nodeState == NodeState.free);
+                        while (curInd.x < col - 2 && curInd.x > 0 && curInd.y < row - 2 && curInd.y > 0 && NodeManager.instance.nodes[curInd.x, curInd.y].nodeState == NodeState.free);
 
-
-
-                        // while (true)
-                        // {
-                        //     curInd += moveDir;
-
-                        //     // Check for boundary conditions and node state
-                        //     if (curInd.x < 0 || curInd.x >= col || curInd.y < 0 || curInd.y >= row ||
-                        //         NodeManager.instance.nodes[curInd.x, curInd.y].nodeState != NodeState.free)
-                        //     {
-                        //         break;
-                        //     }
-                        // }
 
 
 
                         curBox.transform.position = GetWorldPos(curInd);
                         curBox.SetBox(NodeManager.instance.nodes[curInd.x, curInd.y]);
                         curBox.boxState = BoxState.Moved;
+                        movedBox.Add(curBox);
                     }
                 }
             }
         }
+        Debug.Log("Com");
+        inputState = InputState.receive;
+        foreach (Box item in movedBox)
+        {
+            if (item.boxState != BoxState.Merged)
+            {
+                item.boxState = BoxState.Idle;
+
+            }
+        }
+        movedBox.Clear();
     }
 
 
